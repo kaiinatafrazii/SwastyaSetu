@@ -17,9 +17,6 @@
     "helmet": "^8.0.0",
     "mongoose": "^8.9.0",
     "morgan": "^1.10.0",
-    "mysql2": "^3.24.3",
-    "node-fetch": "^3.3.2",
-    "sequelize": "^6.37.8",
-    "sqlite3": "^6.0.1"
+    "node-fetch": "^3.3.2"
   }
 }

@@ -1,61 +1,53 @@
 import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Link } from 'react-router-dom';
+import { useOnlineStatus } from './hooks/useOnlineStatus';
 import Header from './components/Header';
-import Footer from './components/Footer';
-import ProtectedRoute from './components/ProtectedRoute';
-
-// Pages
-import EmergencyHome from './pages/EmergencyHome';
-import FirstAidLibrary from './pages/FirstAidLibrary';
-import EmergencyGuide from './pages/EmergencyGuide';
-import Helplines from './pages/Helplines';
-import Hospitals from './pages/Hospitals';
-import AIAssistant from './pages/AIAssistant';
-import Dashboard from './pages/Dashboard';
-import AboutSafety from './pages/AboutSafety';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import Profile from './pages/Profile';
+import OfflineIndicator from './components/OfflineIndicator';
+import ChatbotWidget from './components/ChatbotWidget';
+import HomePage from './pages/HomePage';
+import EmergencyInputPage from './pages/EmergencyInputPage';
+import AssessmentPage from './pages/AssessmentPage';
+import FirstAidGuidePage from './pages/FirstAidGuidePage';
+import HealthcareFinderPage from './pages/HealthcareFinderPage';
+import EmergencyServicesPage from './pages/EmergencyServicesPage';
+import FirstAidLibraryPage from './pages/FirstAidLibraryPage';
+import DashboardPage from './pages/DashboardPage';
+import AboutPage from './pages/AboutPage';
 
 export default function App() {
-  return (
-    <div className="app-container">
-      <Header />
-      <main className="main-content">
-        <Routes>
-          <Route path="/" element={<EmergencyHome />} />
-          <Route path="/library" element={<FirstAidLibrary />} />
-          <Route path="/guide/:id" element={<EmergencyGuide />} />
-          <Route path="/helplines" element={<Helplines />} />
-          <Route path="/hospitals" element={<Hospitals />} />
-          <Route path="/assistant" element={<AIAssistant />} />
-          <Route path="/about" element={<AboutSafety />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          
-          {/* Protected Routes */}
-          <Route 
-            path="/dashboard" 
-            element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/profile" 
-            element={
-              <ProtectedRoute>
-                <Profile />
-              </ProtectedRoute>
-            } 
-          />
+  const isOnline = useOnlineStatus();
 
-          {/* Catch-all redirect to Home */}
-          <Route path="*" element={<Navigate to="/" replace />} />
+  return (
+    <div className="app">
+      <Header />
+      <OfflineIndicator isOnline={isOnline} />
+
+      <main className="app__main">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/emergency-input" element={<EmergencyInputPage />} />
+          <Route path="/assessment" element={<AssessmentPage />} />
+          <Route path="/first-aid/:categoryId" element={<FirstAidGuidePage />} />
+          <Route path="/finder" element={<HealthcareFinderPage />} />
+          <Route path="/emergency-services" element={<EmergencyServicesPage />} />
+          <Route path="/library" element={<FirstAidLibraryPage />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/about" element={<AboutPage />} />
         </Routes>
       </main>
-      <Footer />
+
+      <footer className="site-footer no-print">
+        <div className="site-footer__inner">
+          <span>
+            <strong>SwasthyaSetu</strong> &middot; Rural Emergency &amp; Health Bridge &middot;{' '}
+            <Link to="/about">About &amp; safety</Link>
+          </span>
+          <a href="tel:112" className="site-footer__call">Emergency: 112</a>
+        </div>
+      </footer>
+
+      {/* Floating AI Chatbot in the bottom-right corner */}
+      <ChatbotWidget />
     </div>
   );
 }
