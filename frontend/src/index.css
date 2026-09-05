@@ -1,0 +1,138 @@
+/* SwasthyaSetu Design System Tokens & Base Reset */
+:root {
+  --primary-red: #d32f2f;
+  --dark-red: #b71c1c;
+  --light-red: #ffebee;
+  --accent-crimson: #c62828;
+  --alert-red-border: #ef5350;
+  
+  --bg-main: #f8f9fa;
+  --bg-card: #ffffff;
+  --bg-card-alt: #f1f3f5;
+  --bg-dark: #121212;
+  --bg-dark-card: #1e1e1e;
+  
+  --text-primary: #1a1a1a;
+  --text-secondary: #4a5568;
+  --text-muted: #718096;
+  --text-inverse: #ffffff;
+  
+  --border-light: #e2e8f0;
+  --border-medium: #cbd5e0;
+  
+  --success-green: #2e7d32;
+  --warning-amber: #ed6c02;
+  --info-blue: #0288d1;
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-emergency: 0 0 20px rgba(211, 47, 47, 0.35);
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+
+  --font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 600;
+  --font-weight-extrabold: 800;
+}
+
+/* Accessibility: Bold Look Mode */
+body.bold-look-mode {
+  --font-weight-normal: 600;
+  --font-weight-medium: 700;
+  --font-weight-bold: 800;
+  --font-weight-extrabold: 900;
+  --text-primary: #000000;
+  --text-secondary: #1f2937;
+  --border-light: #94a3b8;
+  --border-medium: #475569;
+  letter-spacing: -0.01em;
+}
+
+body.bold-look-mode * {
+  font-weight: inherit;
+}
+
+/* Base Styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  font-family: var(--font-family);
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+  line-height: 1.5;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button, input, select, textarea {
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  transition: all 0.2s ease;
+}
+
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 3px solid var(--primary-red);
+  outline-offset: 2px;
+}
+
+/* Layout Utilities */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 3rem 1rem;
+}
+
+@media (min-width: 768px) {
+  .main-content {
+    padding: 2rem 1.5rem 4rem 1.5rem;
+  }
+}
+
+/* Pulse Animation for Emergency Alert */
+@keyframes pulse-emergency {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(211, 47, 47, 0.7); }
+  70% { transform: scale(1.02); box-shadow: 0 0 0 10px rgba(211, 47, 47, 0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(211, 47, 47, 0); }
+}
+
+@keyframes flash-red {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.85; }
+}
+
+.animate-pulse-emergency {
+  animation: pulse-emergency 2s infinite;
+}
+
+.animate-flash {
+  animation: flash-red 1.5s infinite ease-in-out;
+}

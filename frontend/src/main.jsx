@@ -1,21 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
-import App from './App';
-import { LanguageProvider } from './contexts/LanguageContext';
-import { ThemeProvider } from './contexts/ThemeContext';
-import './styles/base.css';
-import './styles/components.css';
-import './styles/theme-brutal.css';
+import App from './App.jsx';
+import { AuthProvider } from './context/AuthContext.jsx';
+import { ThemeProvider } from './context/ThemeContext.jsx';
+import './index.css';
+import './App.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-      <LanguageProvider>
+    <BrowserRouter>
+      <AuthProvider>
         <ThemeProvider>
           <App />
         </ThemeProvider>
-      </LanguageProvider>
+      </AuthProvider>
     </BrowserRouter>
   </React.StrictMode>
 );
