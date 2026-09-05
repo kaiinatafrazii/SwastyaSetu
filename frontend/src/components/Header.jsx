@@ -29,18 +29,17 @@ export default function Header() {
   const handleNavClick = (e, item) => {
     if (item.type === 'anchor') {
       e.preventDefault();
-      if (location.pathname !== '/') {
-        navigate(`/#${item.target}`);
-        setTimeout(() => {
-          const el = document.getElementById(item.target);
-          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 120);
-      } else {
+      const scrollToSection = () => {
         const el = document.getElementById(item.target);
-        if (el) {
-          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          window.history.replaceState(null, '', `#${item.target}`);
-        }
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        window.history.replaceState(null, '', '/');
+      };
+
+      if (location.pathname !== '/') {
+        navigate('/');
+        setTimeout(scrollToSection, 120);
+      } else {
+        scrollToSection();
       }
     }
   };
