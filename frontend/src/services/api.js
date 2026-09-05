@@ -6,7 +6,9 @@
 import { getOfflineCategory } from '../data/offlineFirstAid';
 import { getVideosForCategory } from '../data/emergencyVideos';
 
-const API_BASE = '/api';
+const API_BASE = (import.meta.env.VITE_API_URL || (import.meta.env.PROD
+  ? 'https://swastyasetu.onrender.com'
+  : '')).replace(/\/$/, '') + '/api';
 
 export async function analyzeSymptoms(description, isDemo = false) {
   // If offline, provide offline keyword matching directly
