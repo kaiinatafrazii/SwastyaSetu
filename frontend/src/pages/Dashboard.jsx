@@ -104,22 +104,22 @@ export default function Dashboard() {
       if (res.success) {
         setShowApptModal(false);
         setApptForm({ doctor_name: '', department: 'Cardiology', appointment_date: '', appointment_time: '10:00 AM', reason: '' });
-        setStatusMsg('Appointment booked successfully!');
+        setStatusMsg(language === 'hi' ? 'अप्वाइंटमेंट सफलतापूर्वक बुक हो गया!' : 'Appointment booked successfully!');
         setTimeout(() => setStatusMsg(''), 3000);
         loadDashboardData();
       }
     } catch (err) {
-      alert(err.response?.data?.message || 'Failed to book appointment.');
+      alert(err.response?.data?.message || (language === 'hi' ? 'अप्वाइंटमेंट बुक करने में विफलता।' : 'Failed to book appointment.'));
     }
   };
 
   const handleCancelAppointment = async (id) => {
-    if (window.confirm('Are you sure you want to cancel this appointment?')) {
+    if (window.confirm(language === 'hi' ? 'क्या आप इस अप्वाइंटमेंट को रद्द करना चाहते हैं?' : 'Are you sure you want to cancel this appointment?')) {
       try {
         await api.cancelAppointment(id);
         loadDashboardData();
       } catch (err) {
-        alert('Failed to cancel appointment.');
+        alert(language === 'hi' ? 'अप्वाइंटमेंट रद्द नहीं हो सका।' : 'Failed to cancel appointment.');
       }
     }
   };
@@ -129,7 +129,7 @@ export default function Dashboard() {
       await api.deleteAppointment(id);
       loadDashboardData();
     } catch (err) {
-      alert('Failed to delete appointment.');
+      alert(language === 'hi' ? 'अप्वाइंटमेंट हटाने में त्रुटि।' : 'Failed to delete appointment.');
     }
   };
 
@@ -140,22 +140,22 @@ export default function Dashboard() {
       if (res.success) {
         setShowRecordModal(false);
         setRecordForm({ record_type: 'Lab Report', title: '', description: '', doctor_or_lab: '', record_date: new Date().toISOString().split('T')[0] });
-        setStatusMsg('Health record added successfully!');
+        setStatusMsg(language === 'hi' ? 'स्वास्थ्य रिकॉर्ड सफलतापूर्वक जोड़ा गया!' : 'Health record added successfully!');
         setTimeout(() => setStatusMsg(''), 3000);
         loadDashboardData();
       }
     } catch (err) {
-      alert(err.response?.data?.message || 'Failed to save record.');
+      alert(err.response?.data?.message || (language === 'hi' ? 'रिकॉर्ड सहेजने में विफलता।' : 'Failed to save record.'));
     }
   };
 
   const handleDeleteRecord = async (id) => {
-    if (window.confirm('Are you sure you want to delete this health record?')) {
+    if (window.confirm(language === 'hi' ? 'क्या आप वाकई इस स्वास्थ्य रिकॉर्ड को हटाना चाहते हैं?' : 'Are you sure you want to delete this health record?')) {
       try {
         await api.deleteHealthRecord(id);
         loadDashboardData();
       } catch (err) {
-        alert('Failed to delete record.');
+        alert(language === 'hi' ? 'रिकॉर्ड हटाने में विफलता।' : 'Failed to delete record.');
       }
     }
   };
@@ -167,12 +167,12 @@ export default function Dashboard() {
       if (res.success) {
         setShowContactModal(false);
         setContactForm({ name: '', relationship: 'Spouse', phone: '', is_primary: false });
-        setStatusMsg('Emergency contact saved!');
+        setStatusMsg(language === 'hi' ? 'आपातकालीन संपर्क सुरक्षित किया गया!' : 'Emergency contact saved!');
         setTimeout(() => setStatusMsg(''), 3000);
         loadDashboardData();
       }
     } catch (err) {
-      alert('Failed to add contact.');
+      alert(language === 'hi' ? 'संपर्क जोड़ने में विफलता।' : 'Failed to add contact.');
     }
   };
 
@@ -181,7 +181,7 @@ export default function Dashboard() {
       await api.deleteEmergencyContact(id);
       loadDashboardData();
     } catch (err) {
-      alert('Failed to delete contact.');
+      alert(language === 'hi' ? 'संपर्क हटाने में विफलता।' : 'Failed to delete contact.');
     }
   };
 
@@ -369,55 +369,66 @@ export default function Dashboard() {
             </div>
 
             {loading ? (
-              <p style={{ color: 'var(--text-muted)' }}>Loading appointments...</p>
+              <p style={{ color: 'var(--text-muted)' }}>{language === 'hi' ? 'अप्वाइंटमेंट लोड हो रहे हैं...' : 'Loading appointments...'}</p>
             ) : appointments.length === 0 ? (
               <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>{t('no_appointments')}</p>
             ) : (
               <div>
-                {appointments.map((appt) => (
-                  <div key={appt.id} className="dash-list-item">
-                    <div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <h4 style={{ fontWeight: 800, fontSize: '1.05rem' }}>{appt.doctor_name}</h4>
-                        <span style={{ 
-                          fontSize: '0.75rem', 
-                          fontWeight: 700, 
-                          padding: '0.15rem 0.5rem', 
-                          borderRadius: '4px',
-                          background: appt.status === 'Upcoming' ? '#e0f2fe' : appt.status === 'Cancelled' ? '#fee2e2' : '#dcfce7',
-                          color: appt.status === 'Upcoming' ? '#0369a1' : appt.status === 'Cancelled' ? '#b91c1c' : '#15803d'
-                        }}>
-                          {appt.status}
-                        </span>
-                      </div>
-                      <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '0.2rem' }}>
-                        <strong>{appt.department}</strong> • {appt.appointment_date} at {appt.appointment_time}
-                      </div>
-                      <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>
-                        Reason: {appt.reason}
-                      </div>
-                    </div>
+                {appointments.map((appt) => {
+                  const statusLabel = appt.status === 'Upcoming' 
+                    ? (language === 'hi' ? 'आगामी' : 'Upcoming') 
+                    : appt.status === 'Cancelled' 
+                    ? (language === 'hi' ? 'रद्द' : 'Cancelled') 
+                    : (language === 'hi' ? 'पुष्ट' : 'Confirmed');
 
-                    <div style={{ display: 'flex', gap: '0.4rem' }}>
-                      {appt.status === 'Upcoming' && (
+                  return (
+                    <div key={appt.id} className="dash-list-item">
+                      <div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                          <h4 style={{ fontWeight: 800, fontSize: '1.05rem' }}>{appt.doctor_name}</h4>
+                          <span style={{ 
+                            fontSize: '0.75rem', 
+                            fontWeight: 700, 
+                            padding: '0.15rem 0.5rem', 
+                            borderRadius: '4px',
+                            background: appt.status === 'Upcoming' ? '#e0f2fe' : appt.status === 'Cancelled' ? '#fee2e2' : '#dcfce7',
+                            color: appt.status === 'Upcoming' ? '#0369a1' : appt.status === 'Cancelled' ? '#b91c1c' : '#15803d'
+                          }}>
+                            {statusLabel}
+                          </span>
+                        </div>
+                        <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '0.2rem' }}>
+                          <strong>{appt.department}</strong> • {appt.appointment_date} {language === 'hi' ? 'समय' : 'at'} {appt.appointment_time}
+                        </div>
+                        {appt.reason && (
+                          <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>
+                            {language === 'hi' ? 'कारण:' : 'Reason:'} {appt.reason}
+                          </div>
+                        )}
+                      </div>
+
+                      <div style={{ display: 'flex', gap: '0.4rem' }}>
+                        {appt.status !== 'Cancelled' && (
+                          <button 
+                            onClick={() => handleCancelAppointment(appt.id)} 
+                            className="btn-secondary"
+                            style={{ fontSize: '0.8rem', padding: '0.3rem 0.6rem', color: '#b91c1c' }}
+                          >
+                            {language === 'hi' ? 'रद्द करें' : 'Cancel'}
+                          </button>
+                        )}
                         <button 
-                          onClick={() => handleCancelAppointment(appt.id)} 
+                          onClick={() => handleDeleteAppointment(appt.id)}
                           className="btn-secondary"
-                          style={{ fontSize: '0.8rem', padding: '0.3rem 0.6rem', color: '#b91c1c' }}
+                          style={{ padding: '0.3rem 0.5rem', color: 'var(--text-muted)' }}
+                          title={language === 'hi' ? 'हटाएं' : 'Delete'}
                         >
-                          Cancel
+                          <Trash2 size={16} />
                         </button>
-                      )}
-                      <button 
-                        onClick={() => handleDeleteAppointment(appt.id)}
-                        className="btn-secondary"
-                        style={{ padding: '0.3rem 0.5rem', color: 'var(--text-muted)' }}
-                      >
-                        <Trash2 size={16} />
-                      </button>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>
@@ -441,7 +452,7 @@ export default function Dashboard() {
             </div>
 
             {loading ? (
-              <p style={{ color: 'var(--text-muted)' }}>Loading health records...</p>
+              <p style={{ color: 'var(--text-muted)' }}>{language === 'hi' ? 'स्वास्थ्य रिकॉर्ड लोड हो रहे हैं...' : 'Loading health records...'}</p>
             ) : records.length === 0 ? (
               <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>{t('no_records')}</p>
             ) : (
@@ -456,7 +467,7 @@ export default function Dashboard() {
                         <h4 style={{ fontWeight: 800, fontSize: '1.05rem' }}>{rec.title}</h4>
                       </div>
                       <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '0.2rem' }}>
-                        {rec.doctor_or_lab && <span>By {rec.doctor_or_lab} • </span>} Date: {rec.record_date}
+                        {rec.doctor_or_lab && <span>{language === 'hi' ? 'द्वारा' : 'By'} {rec.doctor_or_lab} • </span>} {language === 'hi' ? 'दिनांक:' : 'Date:'} {rec.record_date}
                       </div>
                       {rec.description && (
                         <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '0.3rem' }}>
@@ -469,6 +480,7 @@ export default function Dashboard() {
                       onClick={() => handleDeleteRecord(rec.id)}
                       className="btn-secondary"
                       style={{ padding: '0.3rem 0.5rem', color: '#b91c1c' }}
+                      title={language === 'hi' ? 'हटाएं' : 'Delete'}
                     >
                       <Trash2 size={16} />
                     </button>
@@ -506,17 +518,17 @@ export default function Dashboard() {
 
               <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border-light)', paddingBottom: '0.4rem' }}>
                 <span style={{ color: 'var(--text-muted)' }}>{t('known_allergies')}:</span>
-                <strong>{profile?.allergies || 'None recorded'}</strong>
+                <strong>{profile?.allergies || (language === 'hi' ? 'कोई दर्ज नहीं' : 'None recorded')}</strong>
               </div>
 
               <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border-light)', paddingBottom: '0.4rem' }}>
                 <span style={{ color: 'var(--text-muted)' }}>{t('chronic_conditions')}:</span>
-                <strong>{profile?.medical_conditions || 'None recorded'}</strong>
+                <strong>{profile?.medical_conditions || (language === 'hi' ? 'कोई दर्ज नहीं' : 'None recorded')}</strong>
               </div>
 
               <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border-light)', paddingBottom: '0.4rem' }}>
-                <span style={{ color: 'var(--text-muted)' }}>{language === 'hi' ? 'फ़ोन' : 'Phone'}:</span>
-                <strong>{profile?.phone || 'Not provided'}</strong>
+                <span style={{ color: 'var(--text-muted)' }}>{language === 'hi' ? 'फ़ोन:' : 'Phone:'}</span>
+                <strong>{profile?.phone || (language === 'hi' ? 'उपलब्ध नहीं' : 'Not provided')}</strong>
               </div>
             </div>
           </div>
@@ -533,27 +545,27 @@ export default function Dashboard() {
                 className="btn-secondary" 
                 style={{ fontSize: '0.8rem', padding: '0.3rem 0.6rem' }}
               >
-                <Plus size={14} /> Add
+                <Plus size={14} /> {language === 'hi' ? 'जोड़ें' : 'Add'}
               </button>
             </div>
 
             {contacts.length === 0 ? (
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem' }}>No emergency contacts added yet.</p>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem' }}>{language === 'hi' ? 'अभी तक कोई आपातकालीन संपर्क नहीं जोड़ा गया।' : 'No emergency contacts added yet.'}</p>
             ) : (
               <div>
                 {contacts.map((c) => (
                   <div key={c.id} style={{ background: 'var(--bg-main)', border: '1px solid var(--border-light)', borderRadius: '6px', padding: '0.75rem', marginBottom: '0.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div>
                       <div style={{ fontWeight: 800, fontSize: '0.95rem' }}>
-                        {c.name} {c.is_primary && <span style={{ fontSize: '0.7rem', background: '#ecfdf5', color: '#047857', padding: '0.1rem 0.4rem', borderRadius: '4px' }}>Primary</span>}
+                        {c.name} {c.is_primary && <span style={{ fontSize: '0.7rem', background: '#ecfdf5', color: '#047857', padding: '0.1rem 0.4rem', borderRadius: '4px' }}>{language === 'hi' ? 'मुख्य संपर्क' : 'Primary'}</span>}
                       </div>
                       <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>{c.relationship} • {c.phone}</div>
                     </div>
                     <div style={{ display: 'flex', gap: '0.3rem' }}>
-                      <a href={`tel:${c.phone}`} style={{ color: 'var(--primary-red)', padding: '0.3rem' }}>
+                      <a href={`tel:${c.phone}`} style={{ color: 'var(--primary-red)', padding: '0.3rem' }} title={language === 'hi' ? 'कॉल करें' : 'Call'}>
                         <PhoneCall size={16} />
                       </a>
-                      <button onClick={() => handleDeleteContact(c.id)} style={{ color: 'var(--text-muted)', padding: '0.3rem' }}>
+                      <button onClick={() => handleDeleteContact(c.id)} style={{ color: 'var(--text-muted)', padding: '0.3rem' }} title={language === 'hi' ? 'हटाएं' : 'Delete'}>
                         <Trash2 size={16} />
                       </button>
                     </div>

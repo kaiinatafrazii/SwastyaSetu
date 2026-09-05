@@ -77,15 +77,15 @@ export default function Header() {
               aria-pressed={language === 'en'}
               title="English"
             >
-              EN
+              English
             </button>
             <button 
               type="button"
               onClick={() => setLanguage('hi')} 
               aria-pressed={language === 'hi'}
-              title="हिन्दी"
+              title="हिंदी"
             >
-              हिं
+              हिंदी
             </button>
           </div>
         </div>
