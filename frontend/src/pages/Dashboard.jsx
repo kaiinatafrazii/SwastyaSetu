@@ -592,7 +592,7 @@ export default function Dashboard() {
                 <input 
                   type="text" 
                   className="form-input" 
-                  placeholder="e.g. Dr. Rajiv Gupta"
+                  placeholder={language === 'hi' ? 'उदा. डॉ. राजीव गुप्ता' : 'e.g. Dr. Rajiv Gupta'}
                   required
                   value={apptForm.doctor_name}
                   onChange={(e) => setApptForm({ ...apptForm, doctor_name: e.target.value })}
@@ -606,12 +606,12 @@ export default function Dashboard() {
                   value={apptForm.department}
                   onChange={(e) => setApptForm({ ...apptForm, department: e.target.value })}
                 >
-                  <option value="Cardiology">Cardiology</option>
-                  <option value="Pulmonology">Pulmonology</option>
-                  <option value="Orthopedics">Orthopedics</option>
-                  <option value="General Medicine">General Medicine</option>
-                  <option value="Emergency & Trauma">Emergency & Trauma</option>
-                  <option value="Pediatrics">Pediatrics</option>
+                  <option value="Cardiology">{language === 'hi' ? 'हृदय रोग विभाग (Cardiology)' : 'Cardiology'}</option>
+                  <option value="Pulmonology">{language === 'hi' ? 'श्वसन रोग विभाग (Pulmonology)' : 'Pulmonology'}</option>
+                  <option value="Orthopedics">{language === 'hi' ? 'अस्थि रोग विभाग (Orthopedics)' : 'Orthopedics'}</option>
+                  <option value="General Medicine">{language === 'hi' ? 'सामान्य चिकित्सा (General Medicine)' : 'General Medicine'}</option>
+                  <option value="Emergency & Trauma">{language === 'hi' ? 'आपातकाल एवं ट्रॉमा (Emergency & Trauma)' : 'Emergency & Trauma'}</option>
+                  <option value="Pediatrics">{language === 'hi' ? 'बाल रोग विभाग (Pediatrics)' : 'Pediatrics'}</option>
                 </select>
               </div>
 
@@ -632,7 +632,7 @@ export default function Dashboard() {
                   <input 
                     type="text" 
                     className="form-input" 
-                    placeholder="e.g. 10:30 AM"
+                    placeholder={language === 'hi' ? 'उदा. 10:30 पूर्वाह्न (AM)' : 'e.g. 10:30 AM'}
                     required
                     value={apptForm.appointment_time}
                     onChange={(e) => setApptForm({ ...apptForm, appointment_time: e.target.value })}
@@ -645,7 +645,7 @@ export default function Dashboard() {
                 <textarea 
                   className="form-textarea"
                   rows="3"
-                  placeholder="Describe your health symptoms or routine checkup reason..."
+                  placeholder={language === 'hi' ? 'अपने स्वास्थ्य लक्षण या परामर्श का कारण लिखें...' : 'Describe your health symptoms or routine checkup reason...'}
                   required
                   value={apptForm.reason}
                   onChange={(e) => setApptForm({ ...apptForm, reason: e.target.value })}
@@ -678,11 +678,11 @@ export default function Dashboard() {
                   value={recordForm.record_type}
                   onChange={(e) => setRecordForm({ ...recordForm, record_type: e.target.value })}
                 >
-                  <option value="Lab Report">Lab Report</option>
-                  <option value="Prescription">Prescription</option>
-                  <option value="Vaccination">Vaccination</option>
-                  <option value="Discharge Summary">Discharge Summary</option>
-                  <option value="Diagnostic Scan (X-Ray/ECG)">Diagnostic Scan (X-Ray/ECG)</option>
+                  <option value="Lab Report">{language === 'hi' ? 'लैब रिपोर्ट (Lab Report)' : 'Lab Report'}</option>
+                  <option value="Prescription">{language === 'hi' ? 'दवा पर्ची (Prescription)' : 'Prescription'}</option>
+                  <option value="Vaccination">{language === 'hi' ? 'टीकाकरण (Vaccination)' : 'Vaccination'}</option>
+                  <option value="Discharge Summary">{language === 'hi' ? 'अस्पताल डिस्चार्ज सारांश' : 'Discharge Summary'}</option>
+                  <option value="Diagnostic Scan (X-Ray/ECG)">{language === 'hi' ? 'जांच स्कैन (X-Ray/ECG)' : 'Diagnostic Scan (X-Ray/ECG)'}</option>
                 </select>
               </div>
 
@@ -691,7 +691,7 @@ export default function Dashboard() {
                 <input 
                   type="text" 
                   className="form-input" 
-                  placeholder="e.g. Lipid Profile & Blood Sugar"
+                  placeholder={language === 'hi' ? 'उदा. लिपिड प्रोफाइल और ब्लड शुगर' : 'e.g. Lipid Profile & Blood Sugar'}
                   required
                   value={recordForm.title}
                   onChange={(e) => setRecordForm({ ...recordForm, title: e.target.value })}
@@ -703,7 +703,7 @@ export default function Dashboard() {
                 <input 
                   type="text" 
                   className="form-input" 
-                  placeholder="e.g. Max Path Labs / Dr. Sunita"
+                  placeholder={language === 'hi' ? 'उदा. मैक्स पैथ लैब्स / डॉ. सुनीता' : 'e.g. Max Path Labs / Dr. Sunita'}
                   value={recordForm.doctor_or_lab}
                   onChange={(e) => setRecordForm({ ...recordForm, doctor_or_lab: e.target.value })}
                 />
@@ -725,7 +725,7 @@ export default function Dashboard() {
                 <textarea 
                   className="form-textarea" 
                   rows="3"
-                  placeholder="Enter medical findings, lab numbers, or instructions..."
+                  placeholder={language === 'hi' ? 'मेडिकल रिपोर्ट का विवरण, नंबर या निर्देश लिखें...' : 'Enter medical findings, lab numbers, or instructions...'}
                   value={recordForm.description}
                   onChange={(e) => setRecordForm({ ...recordForm, description: e.target.value })}
                 />
@@ -755,7 +755,7 @@ export default function Dashboard() {
                 <input 
                   type="text" 
                   className="form-input" 
-                  placeholder="Contact person's full name"
+                  placeholder={language === 'hi' ? 'संपर्क व्यक्ति का पूरा नाम' : "Contact person's full name"}
                   required
                   value={contactForm.name}
                   onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
@@ -767,7 +767,7 @@ export default function Dashboard() {
                 <input 
                   type="text" 
                   className="form-input" 
-                  placeholder="e.g. Spouse, Father, Sister"
+                  placeholder={language === 'hi' ? 'उदा. पति/पत्नी, पिता, बहन' : 'e.g. Spouse, Father, Sister'}
                   required
                   value={contactForm.relationship}
                   onChange={(e) => setContactForm({ ...contactForm, relationship: e.target.value })}
@@ -873,7 +873,7 @@ export default function Dashboard() {
                 <input 
                   type="text" 
                   className="form-input" 
-                  placeholder="e.g. Penicillin, Peanuts, None"
+                  placeholder={language === 'hi' ? 'उदा. पेनिसिलिन, मूंगफली, कोई नहीं' : 'e.g. Penicillin, Peanuts, None'}
                   value={profileForm.allergies || ''}
                   onChange={(e) => setProfileForm({ ...profileForm, allergies: e.target.value })}
                 />
@@ -884,7 +884,7 @@ export default function Dashboard() {
                 <input 
                   type="text" 
                   className="form-input" 
-                  placeholder="e.g. Diabetes Type 2, Hypertension, Asthma"
+                  placeholder={language === 'hi' ? 'उदा. डायबिटीज, उच्च रक्तचाप, अस्थमा' : 'e.g. Diabetes Type 2, Hypertension, Asthma'}
                   value={profileForm.medical_conditions || ''}
                   onChange={(e) => setProfileForm({ ...profileForm, medical_conditions: e.target.value })}
                 />
