@@ -191,3 +191,211 @@ function getOfflineAnalysis(text) {
     }
   };
 }
+
+/**
+ * LocalStorage-backed client API for Patient Dashboard
+ * Works seamlessly offline without requiring login/auth
+ */
+export const api = {
+  async getAppointments() {
+    try {
+      const data = localStorage.getItem('swasthyasetu_appointments');
+      if (!data) {
+        const initial = [
+          {
+            id: 'appt-1',
+            doctor_name: 'Dr. Rajiv Gupta',
+            department: 'Cardiology',
+            appointment_date: new Date(Date.now() + 86400000 * 2).toISOString().split('T')[0],
+            appointment_time: '10:30 AM',
+            reason: 'Routine ECG & Blood Pressure follow-up',
+            status: 'confirmed'
+          },
+          {
+            id: 'appt-2',
+            doctor_name: 'Dr. Ananya Sharma',
+            department: 'General Medicine',
+            appointment_date: new Date(Date.now() + 86400000 * 5).toISOString().split('T')[0],
+            appointment_time: '02:00 PM',
+            reason: 'Annual Health Checkup & Blood Sugar Test',
+            status: 'confirmed'
+          }
+        ];
+        localStorage.setItem('swasthyasetu_appointments', JSON.stringify(initial));
+        return { success: true, data: initial };
+      }
+      return { success: true, data: JSON.parse(data) };
+    } catch {
+      return { success: true, data: [] };
+    }
+  },
+
+  async createAppointment(appt) {
+    const res = await this.getAppointments();
+    const list = res.data || [];
+    const newAppt = {
+      id: 'appt-' + Date.now(),
+      ...appt,
+      status: 'confirmed',
+      created_at: new Date().toISOString()
+    };
+    list.unshift(newAppt);
+    localStorage.setItem('swasthyasetu_appointments', JSON.stringify(list));
+    return { success: true, data: newAppt };
+  },
+
+  async cancelAppointment(id) {
+    const res = await this.getAppointments();
+    const list = res.data || [];
+    const updated = list.map(item => item.id === id ? { ...item, status: 'cancelled' } : item);
+    localStorage.setItem('swasthyasetu_appointments', JSON.stringify(updated));
+    return { success: true };
+  },
+
+  async deleteAppointment(id) {
+    const res = await this.getAppointments();
+    const list = (res.data || []).filter(item => item.id !== id);
+    localStorage.setItem('swasthyasetu_appointments', JSON.stringify(list));
+    return { success: true };
+  },
+
+  async getHealthRecords() {
+    try {
+      const data = localStorage.getItem('swasthyasetu_records');
+      if (!data) {
+        const initial = [
+          {
+            id: 'rec-1',
+            record_type: 'Lab Report',
+            title: 'Complete Blood Count (CBC) & Lipid Panel',
+            doctor_or_lab: 'Apollo Diagnostics',
+            record_date: new Date(Date.now() - 86400000 * 7).toISOString().split('T')[0],
+            description: 'Hemoglobin: 14.2 g/dL, Total Cholesterol: 185 mg/dL. All parameters normal.'
+          },
+          {
+            id: 'rec-2',
+            record_type: 'Prescription',
+            title: 'Cardiology Maintenance Rx',
+            doctor_or_lab: 'Dr. Rajiv Gupta',
+            record_date: new Date(Date.now() - 86400000 * 14).toISOString().split('T')[0],
+            description: 'Amlodipine 5mg OD, Aspirin 75mg post lunch. Review after 30 days.'
+          }
+        ];
+        localStorage.setItem('swasthyasetu_records', JSON.stringify(initial));
+        return { success: true, data: initial };
+      }
+      return { success: true, data: JSON.parse(data) };
+    } catch {
+      return { success: true, data: [] };
+    }
+  },
+
+  async createHealthRecord(rec) {
+    const res = await this.getHealthRecords();
+    const list = res.data || [];
+    const newRecord = {
+      id: 'rec-' + Date.now(),
+      ...rec,
+      created_at: new Date().toISOString()
+    };
+    list.unshift(newRecord);
+    localStorage.setItem('swasthyasetu_records', JSON.stringify(list));
+    return { success: true, data: newRecord };
+  },
+
+  async deleteHealthRecord(id) {
+    const res = await this.getHealthRecords();
+    const list = (res.data || []).filter(item => item.id !== id);
+    localStorage.setItem('swasthyasetu_records', JSON.stringify(list));
+    return { success: true };
+  },
+
+  async getEmergencyContacts() {
+    try {
+      const data = localStorage.getItem('swasthyasetu_contacts');
+      if (!data) {
+        const initial = [
+          {
+            id: 'con-1',
+            name: 'Pooja Verma',
+            relationship: 'Spouse',
+            phone: '+91 98765 43210',
+            is_primary: true
+          },
+          {
+            id: 'con-2',
+            name: 'Ramesh Sharma',
+            relationship: 'Brother / Family Doctor',
+            phone: '+91 98123 45678',
+            is_primary: false
+          }
+        ];
+        localStorage.setItem('swasthyasetu_contacts', JSON.stringify(initial));
+        return { success: true, data: initial };
+      }
+      return { success: true, data: JSON.parse(data) };
+    } catch {
+      return { success: true, data: [] };
+    }
+  },
+
+  async createEmergencyContact(con) {
+    const res = await this.getEmergencyContacts();
+    let list = res.data || [];
+    if (con.is_primary) {
+      list = list.map(c => ({ ...c, is_primary: false }));
+    }
+    const newContact = {
+      id: 'con-' + Date.now(),
+      ...con,
+      created_at: new Date().toISOString()
+    };
+    list.push(newContact);
+    localStorage.setItem('swasthyasetu_contacts', JSON.stringify(list));
+    return { success: true, data: newContact };
+  },
+
+  async deleteEmergencyContact(id) {
+    const res = await this.getEmergencyContacts();
+    const list = (res.data || []).filter(item => item.id !== id);
+    localStorage.setItem('swasthyasetu_contacts', JSON.stringify(list));
+    return { success: true };
+  },
+
+  getProfile() {
+    try {
+      const p = localStorage.getItem('swasthyasetu_profile');
+      if (p) return JSON.parse(p);
+    } catch {}
+    return {
+      name: 'Aarav Sharma',
+      email: 'aarav.sharma@swasthyasetu.org',
+      phone: '+91 98765 00000',
+      blood_group: 'B+',
+      allergies: 'Penicillin, Dust Mites',
+      medical_conditions: 'Mild Hypertension'
+    };
+  },
+
+  saveProfile(profile) {
+    localStorage.setItem('swasthyasetu_profile', JSON.stringify(profile));
+    return { success: true, data: profile };
+  },
+
+  // Mock methods in case AuthContext is touched
+  async getMe() {
+    return { success: true, user: this.getProfile() };
+  },
+  async login(cred) {
+    return { success: true, user: this.getProfile(), token: 'mock-token' };
+  },
+  async register(data) {
+    return { success: true, user: this.getProfile(), token: 'mock-token' };
+  },
+  logout() {
+    localStorage.removeItem('swasthyasetu_token');
+  },
+  async updateProfile(profileData) {
+    return this.saveProfile(profileData);
+  }
+};

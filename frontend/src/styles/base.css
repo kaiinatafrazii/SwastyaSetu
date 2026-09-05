@@ -73,8 +73,8 @@
   /* 56px: WCAG asks 44, but this is tapped one-handed by a shaking hand */
   --tap: 56px;
 
-  --wide: 72rem;
-  --mid: 46rem;
+  --wide: 1240px;
+  --mid: 52rem;
   --narrow: 36rem;
 
   /* Body copy stops here regardless of container width — past roughly 70

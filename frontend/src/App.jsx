@@ -4,7 +4,8 @@ import { useOnlineStatus } from './hooks/useOnlineStatus';
 import Header from './components/Header';
 import OfflineIndicator from './components/OfflineIndicator';
 import ChatbotWidget from './components/ChatbotWidget';
-import HomePage from './pages/HomePage';
+import LandingPage from './pages/LandingPage';
+import Dashboard from './pages/Dashboard';
 import EmergencyInputPage from './pages/EmergencyInputPage';
 import AssessmentPage from './pages/AssessmentPage';
 import FirstAidGuidePage from './pages/FirstAidGuidePage';
@@ -24,14 +25,16 @@ export default function App() {
 
       <main className="app__main">
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/my-dashboard" element={<Dashboard />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/system-stats" element={<DashboardPage />} />
           <Route path="/emergency-input" element={<EmergencyInputPage />} />
           <Route path="/assessment" element={<AssessmentPage />} />
           <Route path="/first-aid/:categoryId" element={<FirstAidGuidePage />} />
           <Route path="/finder" element={<HealthcareFinderPage />} />
           <Route path="/emergency-services" element={<EmergencyServicesPage />} />
           <Route path="/library" element={<FirstAidLibraryPage />} />
-          <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/about" element={<AboutPage />} />
         </Routes>
       </main>

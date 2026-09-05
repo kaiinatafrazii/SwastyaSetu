@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { 
   LayoutDashboard, 
   Calendar, 
@@ -13,15 +14,30 @@ import {
   Heart, 
   Activity, 
   Clock, 
-  Hospital 
+  Hospital,
+  Edit2,
+  BookOpen,
+  Building2,
+  Siren,
+  Stethoscope,
+  ArrowRight,
+  Sparkles
 } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
-import { useTheme } from '../context/ThemeContext';
+import { useLanguage } from '../contexts/LanguageContext';
+import { translations } from '../data/translations';
 import { api } from '../services/api';
+import '../styles/Dashboard.css';
 
 export default function Dashboard() {
-  const { user } = useAuth();
-  const { t } = useTheme();
+  const { language } = useLanguage();
+  const t = (key) => {
+    const dict = translations[language] || translations.en;
+    return dict[key] || translations.en[key] || key;
+  };
+
+  const [profile, setProfile] = useState(() => api.getProfile());
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [profileForm, setProfileForm] = useState(() => api.getProfile());
 
   const [appointments, setAppointments] = useState([]);
   const [records, setRecords] = useState([]);
@@ -169,22 +185,31 @@ export default function Dashboard() {
     }
   };
 
+  const handleUpdateProfile = (e) => {
+    e.preventDefault();
+    api.saveProfile(profileForm);
+    setProfile({ ...profileForm });
+    setShowProfileModal(false);
+    setStatusMsg(language === 'hi' ? 'मेडिकल प्रोफाइल सुरक्षित हो गई!' : 'Medical profile updated successfully!');
+    setTimeout(() => setStatusMsg(''), 3000);
+  };
+
   return (
-    <div>
+    <div className="dashboard-container">
       {/* Dashboard Top Header */}
-      <div style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+      <div className="dashboard-header-bar">
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.2rem' }}>
-            <LayoutDashboard size={26} color="var(--primary-red)" />
-            <h1 style={{ fontSize: '1.8rem', fontWeight: 800 }}>{t('dashboard_title')}</h1>
+          <div className="dashboard-title-row">
+            <LayoutDashboard size={28} color="var(--primary-red)" />
+            <h1>{t('dashboard_title')}</h1>
           </div>
-          <p style={{ color: 'var(--text-secondary)' }}>
-            {t('dashboard_welcome')}, <strong style={{ color: '#111827' }}>{user?.name || 'Patient'}</strong> ({user?.email})
+          <p className="dashboard-welcome-sub">
+            {t('dashboard_welcome')}, <strong style={{ color: '#0f172a' }}>{profile?.name || 'Patient'}</strong> ({profile?.email})
           </p>
         </div>
 
         <div style={{ display: 'flex', gap: '0.5rem' }}>
-          <a href="tel:112" className="btn-call-112" style={{ fontSize: '0.95rem', padding: '0.5rem 1rem' }}>
+          <a href="tel:112" className="btn-call-112">
             <PhoneCall size={16} />
             <span>Emergency 112</span>
           </a>
@@ -192,10 +217,134 @@ export default function Dashboard() {
       </div>
 
       {statusMsg && (
-        <div style={{ background: '#ecfdf5', border: '1px solid #a7f3d0', color: '#065f46', padding: '0.75rem 1rem', borderRadius: 'var(--radius-sm)', marginBottom: '1.25rem', fontWeight: 600 }}>
+        <div style={{ background: '#ecfdf5', border: '1px solid #a7f3d0', color: '#065f46', padding: '0.75rem 1rem', borderRadius: '8px', marginBottom: '1.5rem', fontWeight: 600 }}>
           {statusMsg}
         </div>
       )}
+
+      {/* ─── All Features Services Grid ─── */}
+      <section className="dash-features-section">
+        <div className="dash-features-header">
+          <div className="dash-features-title">
+            <Sparkles size={22} color="#dc2626" />
+            <span>{language === 'hi' ? 'स्वास्थ्य सेवाएँ व आपातकालीन सुविधाएँ' : 'Emergency Healthcare Services & Capabilities'}</span>
+          </div>
+          <p className="dash-features-sub">
+            {language === 'hi' 
+              ? 'आपातकालीन ट्रायज, 14+ प्राथमिक उपचार, निकटतम अस्पताल और राष्ट्रीय हेल्पलाइन पर त्वरित पहुँचें:' 
+              : 'Direct 1-click access to AI emergency triage, offline first-aid manuals, ICU hospital finder, and 24/7 helplines:'}
+          </p>
+        </div>
+
+        <div className="dash-features-grid">
+          {/* Feature 1: AI Emergency Triage */}
+          <Link to="/emergency-input" className="dash-feature-card" id="dash-feature-triage">
+            <div className="dash-feature-top">
+              <div className="dash-feature-icon" style={{ background: '#fef2f2', color: '#dc2626' }}>
+                <Stethoscope size={22} />
+              </div>
+              <h4 className="dash-feature-title">{language === 'hi' ? 'AI आपातकालीन ट्रायज' : 'AI Emergency Triage'}</h4>
+            </div>
+            <p className="dash-feature-desc">
+              {language === 'hi' ? 'बोलकर या लिखकर लक्षण बताएँ और तुरंत प्राथमिक कदम पाएँ।' : 'Describe symptoms via voice or text for instant severity triage.'}
+            </p>
+            <span className="dash-feature-btn">
+              <span>{language === 'hi' ? 'ट्रायज शुरू करें' : 'Start Triage'}</span>
+              <ArrowRight size={14} />
+            </span>
+          </Link>
+
+          {/* Feature 2: 14+ First Aid Guides */}
+          <Link to="/library" className="dash-feature-card" id="dash-feature-library">
+            <div className="dash-feature-top">
+              <div className="dash-feature-icon" style={{ background: '#eff6ff', color: '#2563eb' }}>
+                <BookOpen size={22} />
+              </div>
+              <h4 className="dash-feature-title">{language === 'hi' ? '14+ प्राथमिक चिकित्सा' : '14+ First-Aid Guides'}</h4>
+            </div>
+            <p className="dash-feature-desc">
+              {language === 'hi' ? 'कार्डियक, बर्न, फ्रैक्चर, सर्पदंश आदि के प्रमाणित ऑफ़लाइन निर्देश।' : 'Verified offline protocols with video guides for cardiac, burns, bites.'}
+            </p>
+            <span className="dash-feature-btn" style={{ color: '#2563eb' }}>
+              <span>{language === 'hi' ? 'गाइड्स देखें' : 'Browse Guides'}</span>
+              <ArrowRight size={14} />
+            </span>
+          </Link>
+
+          {/* Feature 3: Hospital & ICU Finder */}
+          <Link to="/finder" className="dash-feature-card" id="dash-feature-finder">
+            <div className="dash-feature-top">
+              <div className="dash-feature-icon" style={{ background: '#f0fdf4', color: '#16a34a' }}>
+                <Building2 size={22} />
+              </div>
+              <h4 className="dash-feature-title">{language === 'hi' ? 'अस्पताल व ICU खोजें' : 'Nearest ICU & Hospitals'}</h4>
+            </div>
+            <p className="dash-feature-desc">
+              {language === 'hi' ? 'जीपीएस मैप पर निकटतम सरकारी अस्पताल व ट्रॉमा केयर लोकेट करें।' : 'Interactive GPS map locating nearest 24x7 emergency medical care.'}
+            </p>
+            <span className="dash-feature-btn" style={{ color: '#16a34a' }}>
+              <span>{language === 'hi' ? 'अस्पताल खोजें' : 'Locate Now'}</span>
+              <ArrowRight size={14} />
+            </span>
+          </Link>
+
+          {/* Feature 4: 24x7 Helplines */}
+          <Link to="/emergency-services" className="dash-feature-card" id="dash-feature-helplines">
+            <div className="dash-feature-top">
+              <div className="dash-feature-icon" style={{ background: '#fffbeb', color: '#d97706' }}>
+                <Siren size={22} />
+              </div>
+              <h4 className="dash-feature-title">{language === 'hi' ? '24x7 हेल्पलाइन' : '24x7 Verified Helplines'}</h4>
+            </div>
+            <p className="dash-feature-desc">
+              {language === 'hi' ? '112, 108 एम्बुलेंस, महिला सुरक्षा व पॉइज़न हेल्पलाइन पर सीधा कॉल।' : 'One-tap verified dialing to 112, 108 Ambulance, and Poison Control.'}
+            </p>
+            <span className="dash-feature-btn" style={{ color: '#d97706' }}>
+              <span>{language === 'hi' ? 'हेल्पलाइन देखें' : 'View Helplines'}</span>
+              <ArrowRight size={14} />
+            </span>
+          </Link>
+        </div>
+      </section>
+
+      {/* ─── Quick Actions Toolbar ─── */}
+      <div className="dash-actions-toolbar">
+        <button 
+          onClick={() => setShowApptModal(true)} 
+          className="toolbar-btn toolbar-btn--primary"
+          id="toolbar-book-appt"
+        >
+          <Calendar size={16} />
+          <span>{t('book_appointment')}</span>
+        </button>
+
+        <button 
+          onClick={() => setShowRecordModal(true)} 
+          className="toolbar-btn toolbar-btn--outline"
+          id="toolbar-add-record"
+        >
+          <FileText size={16} />
+          <span>{t('add_record')}</span>
+        </button>
+
+        <button 
+          onClick={() => setShowContactModal(true)} 
+          className="toolbar-btn toolbar-btn--outline"
+          id="toolbar-add-contact"
+        >
+          <PhoneCall size={16} />
+          <span>{t('add_contact')}</span>
+        </button>
+
+        <button 
+          onClick={() => { setProfileForm({ ...profile }); setShowProfileModal(true); }} 
+          className="toolbar-btn toolbar-btn--outline"
+          id="toolbar-edit-profile"
+        >
+          <Edit2 size={15} />
+          <span>{language === 'hi' ? 'मेडिकल प्रोफाइल बदलें' : 'Edit Medical Profile'}</span>
+        </button>
+      </div>
 
       {/* Main Dashboard Grid */}
       <div className="dashboard-grid">
@@ -334,25 +483,40 @@ export default function Dashboard() {
         <div>
           {/* Medical Details Summary */}
           <div className="dash-card">
-            <h3 style={{ fontSize: '1.15rem', fontWeight: 800, marginBottom: '0.9rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-              <Heart size={20} color="var(--primary-red)" />
-              <span>{t('user_medical_profile')}</span>
-            </h3>
+            <div className="dash-card-header" style={{ marginBottom: '0.9rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                <Heart size={20} color="var(--primary-red)" />
+                <h3 style={{ fontSize: '1.15rem', fontWeight: 800 }}>{t('user_medical_profile')}</h3>
+              </div>
+              <button 
+                onClick={() => { setProfileForm({ ...profile }); setShowProfileModal(true); }}
+                className="btn-secondary"
+                style={{ fontSize: '0.8rem', padding: '0.3rem 0.6rem', display: 'flex', alignItems: 'center', gap: '0.3rem' }}
+              >
+                <Edit2 size={13} />
+                <span>{language === 'hi' ? 'संपादित करें' : 'Edit'}</span>
+              </button>
+            </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '0.9rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border-light)', paddingBottom: '0.4rem' }}>
                 <span style={{ color: 'var(--text-muted)' }}>{t('blood_group')}:</span>
-                <strong style={{ color: 'var(--primary-red)', fontSize: '1rem' }}>{user?.blood_group || 'O+'}</strong>
+                <strong style={{ color: 'var(--primary-red)', fontSize: '1rem' }}>{profile?.blood_group || 'B+'}</strong>
               </div>
 
               <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border-light)', paddingBottom: '0.4rem' }}>
                 <span style={{ color: 'var(--text-muted)' }}>{t('known_allergies')}:</span>
-                <strong>{user?.allergies || 'None recorded'}</strong>
+                <strong>{profile?.allergies || 'None recorded'}</strong>
               </div>
 
               <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border-light)', paddingBottom: '0.4rem' }}>
                 <span style={{ color: 'var(--text-muted)' }}>{t('chronic_conditions')}:</span>
-                <strong>{user?.medical_conditions || 'None recorded'}</strong>
+                <strong>{profile?.medical_conditions || 'None recorded'}</strong>
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border-light)', paddingBottom: '0.4rem' }}>
+                <span style={{ color: 'var(--text-muted)' }}>{language === 'hi' ? 'फ़ोन' : 'Phone'}:</span>
+                <strong>{profile?.phone || 'Not provided'}</strong>
               </div>
             </div>
           </div>
@@ -621,6 +785,101 @@ export default function Dashboard() {
 
               <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', marginTop: '1.25rem' }}>
                 <button type="button" onClick={() => setShowContactModal(false)} className="btn-secondary">{t('close_btn')}</button>
+                <button type="submit" className="btn-primary">{t('save_btn')}</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Medical Profile Modal */}
+      {showProfileModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h3 style={{ fontSize: '1.3rem', fontWeight: 800 }}>
+                {language === 'hi' ? 'व्यक्तिगत मेडिकल प्रोफाइल संपादित करें' : 'Edit Personal Medical Profile'}
+              </h3>
+              <button onClick={() => setShowProfileModal(false)}><X size={20} /></button>
+            </div>
+
+            <form onSubmit={handleUpdateProfile}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                <div className="form-group">
+                  <label className="form-label">{t('full_name_label')}</label>
+                  <input 
+                    type="text" 
+                    className="form-input" 
+                    required
+                    value={profileForm.name || ''}
+                    onChange={(e) => setProfileForm({ ...profileForm, name: e.target.value })}
+                  />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">{t('email_label')}</label>
+                  <input 
+                    type="email" 
+                    className="form-input" 
+                    required
+                    value={profileForm.email || ''}
+                    onChange={(e) => setProfileForm({ ...profileForm, email: e.target.value })}
+                  />
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                <div className="form-group">
+                  <label className="form-label">{t('phone_label')}</label>
+                  <input 
+                    type="tel" 
+                    className="form-input" 
+                    value={profileForm.phone || ''}
+                    onChange={(e) => setProfileForm({ ...profileForm, phone: e.target.value })}
+                  />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">{t('blood_group')}</label>
+                  <select 
+                    className="form-select"
+                    value={profileForm.blood_group || 'B+'}
+                    onChange={(e) => setProfileForm({ ...profileForm, blood_group: e.target.value })}
+                  >
+                    <option value="A+">A+</option>
+                    <option value="A-">A-</option>
+                    <option value="B+">B+</option>
+                    <option value="B-">B-</option>
+                    <option value="AB+">AB+</option>
+                    <option value="AB-">AB-</option>
+                    <option value="O+">O+</option>
+                    <option value="O-">O-</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">{t('known_allergies')}</label>
+                <input 
+                  type="text" 
+                  className="form-input" 
+                  placeholder="e.g. Penicillin, Peanuts, None"
+                  value={profileForm.allergies || ''}
+                  onChange={(e) => setProfileForm({ ...profileForm, allergies: e.target.value })}
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">{t('chronic_conditions')}</label>
+                <input 
+                  type="text" 
+                  className="form-input" 
+                  placeholder="e.g. Diabetes Type 2, Hypertension, Asthma"
+                  value={profileForm.medical_conditions || ''}
+                  onChange={(e) => setProfileForm({ ...profileForm, medical_conditions: e.target.value })}
+                />
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', marginTop: '1.25rem' }}>
+                <button type="button" onClick={() => setShowProfileModal(false)} className="btn-secondary">{t('close_btn')}</button>
                 <button type="submit" className="btn-primary">{t('save_btn')}</button>
               </div>
             </form>
