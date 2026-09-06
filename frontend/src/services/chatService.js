@@ -4,8 +4,7 @@
  */
 
 import { getOfflineCategory } from '../data/offlineFirstAid';
-
-const API_BASE = '/api';
+import { API_BASE } from './api';
 
 export async function sendChatMessage(messages, userLocation = null) {
   if (!navigator.onLine) {
