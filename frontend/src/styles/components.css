@@ -403,6 +403,47 @@
   font-weight: 700;
 }
 
+@media (max-width: 39.99rem) {
+  .site-header__bar {
+    gap: var(--s2);
+    padding: var(--s2) var(--s3);
+  }
+
+  .site-header__brand {
+    min-width: 0;
+    gap: var(--s2);
+  }
+
+  .site-header__mark {
+    width: 38px;
+    height: 38px;
+  }
+
+  .site-header__name {
+    font-size: 1.05rem;
+    white-space: nowrap;
+  }
+
+  .site-header__right {
+    gap: var(--s2);
+  }
+
+  .site-header__call {
+    gap: 4px;
+    padding: 7px 9px;
+    font-size: 0.78rem;
+  }
+
+  .lang-switch button {
+    padding: 4px 7px;
+    font-size: 0.72rem;
+  }
+
+  .site-nav__inner {
+    padding-inline: var(--s3);
+  }
+}
+
 /* --- Site footer -------------------------------------------- */
 .site-footer {
   margin-top: auto;

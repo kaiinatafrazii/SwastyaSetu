@@ -17,6 +17,22 @@
   gap: 1.75rem;
 }
 
+@media (max-width: 39.99rem) {
+  .landing-container {
+    padding: 1rem 0.75rem 3.5rem;
+    gap: 3rem;
+  }
+
+  .landing-section {
+    gap: 1.25rem;
+  }
+
+  .landing-subtitle,
+  .hero-main-desc {
+    font-size: 0.98rem;
+  }
+}
+
 .landing-section-header {
   display: flex;
   flex-direction: column;
