@@ -23,9 +23,9 @@ import { registerPrompts } from './prompts/index.js';
 // Load environment variables with MCP settings taking precedence over backend/root defaults.
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-dotenv.config({ path: path.join(__dirname, '../.env') });
-dotenv.config({ path: path.join(__dirname, '../backend/.env') });
 dotenv.config({ path: path.join(__dirname, '.env') });
+dotenv.config({ path: path.join(__dirname, '../backend/.env') });
+dotenv.config({ path: path.join(__dirname, '../.env') });
 
 async function main() {
   logger.info('Initializing Rural Emergency Assistance MCP Server...');
