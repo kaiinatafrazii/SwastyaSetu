@@ -1,0 +1,29 @@
+{
+  "name": "rural-emergency-mcp-server",
+  "version": "1.0.0",
+  "description": "Model Context Protocol (MCP) Server for Rural Emergency Assistance Platform",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test tests/mcpTools.test.js",
+    "mcp:start": "npm start",
+    "mcp:test": "npm test"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "emergency-assistance",
+    "first-aid",
+    "gemini-ai",
+    "claude-desktop",
+    "cursor"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.6.1",
+    "dotenv": "^16.4.7",
+    "zod": "^3.24.2"
+  }
+}

@@ -36,7 +36,7 @@ Respond with ONLY this JSON structure (no markdown, no extra text):
  * Analyze symptoms using Gemini API
  */
 async function analyzeWithAI(userInput) {
-  const apiKey = process.env.GEMINI_API_KEY;
+  const apiKey = process.env.GEMINI_API_KEY?.trim();
 
   if (!apiKey || apiKey === 'your_gemini_api_key_here') {
     console.log('[AI Service] No API key configured, using keyword fallback');
@@ -138,7 +138,7 @@ Guidelines:
  * Multi-turn conversational chat with Gemini API or intelligent local fallback
  */
 async function chatWithAI(messages = [], userLocation = null) {
-  const apiKey = process.env.GEMINI_API_KEY;
+  const apiKey = process.env.GEMINI_API_KEY?.trim();
   const lastUserMsg = messages[messages.length - 1]?.text || '';
 
   if (!apiKey || apiKey === 'your_gemini_api_key_here') {
